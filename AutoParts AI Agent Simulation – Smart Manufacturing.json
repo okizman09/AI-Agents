@@ -1,0 +1,255 @@
+{
+  "name": "AutoParts AI Agent Simulation – Smart Manufacturing",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "995d6ce2-c7fc-4a97-8848-5e0b4cb7fc08",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "id-1",
+              "name": "defect_rate",
+              "value": 18,
+              "type": "number"
+            },
+            {
+              "id": "id-2",
+              "name": "machine_temperature",
+              "value": 85,
+              "type": "number"
+            },
+            {
+              "id": "id-3",
+              "name": "vibration_level",
+              "value": 7,
+              "type": "number"
+            },
+            {
+              "id": "id-4",
+              "name": "order_priority",
+              "value": "High",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "d2ca2403-9624-4ca7-9843-248ce115c31d",
+      "name": "Simulated Production Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        224,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "id-1",
+              "leftValue": "={{ $('Simulated Production Data').item.json.defect_rate }}",
+              "rightValue": "15",
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "fe33e842-166d-4fc1-8c5f-a2a3c7a311ca",
+      "name": "Quality Control Agent",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        448,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "id-1",
+              "leftValue": "={{ $('Simulated Production Data').item.json.machine_temperature }}",
+              "rightValue": "80",
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            },
+            {
+              "id": "id-2",
+              "leftValue": "={{ $('Simulated Production Data').item.json.vibration_level }}",
+              "rightValue": "6",
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "id": "b428ac4d-8c60-4938-9210-daa2b5f66dcd",
+      "name": "Predictive Maintenance Agent",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        672,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "id-1",
+              "name": "schedule_adjustment",
+              "value": "Delay 2 hours",
+              "type": "string"
+            },
+            {
+              "id": "id-2",
+              "name": "priority_override",
+              "value": "Yes",
+              "type": "string"
+            },
+            {
+              "id": "id-3",
+              "name": "custom_order_handling",
+              "value": "Enabled",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "8caca9a3-a79a-402a-8f38-38cf096186a2",
+      "name": "Production Planning Agent",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        896,
+        0
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "77d74a89-a399-4de0-a445-1205e748037e",
+      "name": "Notify Operations Manager",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        0
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Simulated Production Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simulated Production Data": {
+      "main": [
+        [
+          {
+            "node": "Quality Control Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Quality Control Agent": {
+      "main": [
+        [
+          {
+            "node": "Predictive Maintenance Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Predictive Maintenance Agent": {
+      "main": [
+        [
+          {
+            "node": "Production Planning Agent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Production Planning Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Production Planning Agent": {
+      "main": [
+        [
+          {
+            "node": "Notify Operations Manager",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "48967ede-b03c-4b47-888f-8c220fb6f1cb",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "95e65ab0d3b48442cd8e96908e12b15fdcb6f4c941a4591dd52ee4986f3b14df"
+  },
+  "id": "QUjYJ4zCeanUYRPuzFoH5",
+  "tags": []
+}
